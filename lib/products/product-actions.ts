@@ -4,11 +4,7 @@ import { productSchema } from "./product-validation";
 import { products } from "@/db/schema";
 import { db } from "@/db";
 import z from "zod";
-type FormState = {
-  success: boolean;
-  errors?: Record<string, string[]>;
-  message: string;
-};
+import { FormState } from "@/types";
 
 export const addProductAction = async (
   prevState: FormState,
@@ -17,16 +13,23 @@ export const addProductAction = async (
   console.log(formData);
   //auth
   try {
-    const { userId } = await auth();
+    const { userId, orgId } = await auth();
     if (!userId) {
       return {
         success: false,
         message: "you must be signed in to submit a product",
       };
     }
+
+    if (!orgId) {
+      return {
+        success: false,
+        message: "you must be a member of an organizationh to submit a product",
+      };
+    }
     //data
     const user = await currentUser();
-    const userEmail = user?.emailAddresses?.[0].emailAddress || "anonymous";
+    const userEmail = user?.emailAddresses?.[0]?.emailAddress || "anonymous";
     const rawFormData = Object.fromEntries(formData.entries());
 
     //validate the data
@@ -53,6 +56,7 @@ export const addProductAction = async (
       tags: tagsArray,
       status: "pending",
       submittedBy: userEmail,
+      organizationId: orgId,
       userId,
     });
 
