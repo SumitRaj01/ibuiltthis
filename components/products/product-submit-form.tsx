@@ -7,6 +7,7 @@ import { Loader2Icon, LoaderIcon, SparklesIcon } from "lucide-react";
 import { addProductAction } from "@/lib/products/product-actions";
 import { useActionState } from "react";
 import { FormState } from "@/types";
+import { cn } from "@/lib/utils";
 
 export default function ProductSubmitForm() {
   const initialState: FormState = {
@@ -23,6 +24,20 @@ export default function ProductSubmitForm() {
 
   return (
     <form className="space-y-6" action={formAction}>
+      {message && (
+        <div
+          className={cn(
+            "p-4 rounded-lg-border",
+            success
+              ? "bg-primary/10 border-primary text-primary"
+              : "bg-destructive/10 border-destructive text-destructive"
+          )}
+          role="alert"
+          aria-live="polite"
+        >
+          {message}
+        </div>
+      )}
       <div className="space-y-2">
         <FormField
           label="Product Name"
