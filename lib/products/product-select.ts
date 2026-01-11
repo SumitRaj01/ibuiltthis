@@ -37,3 +37,11 @@ export async function getRecentlyLaunchedProducts() {
       new Date(product.createdAt.toISOString()) >= oneWeekAgo
   );
 }
+
+export async function getProductBySlug(slug: string) {
+  const product = await db
+    .select()
+    .from(products)
+    .where(eq(products.slug, slug));
+  return product?.[0] ?? null;
+}
