@@ -60,11 +60,17 @@ export default function ProductExplorer({
         </div>
 
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setSortBy("trending")}>
+          <Button
+            variant={sortBy === "trending" ? "default" : "outline"}
+            onClick={() => setSortBy("trending")}
+          >
             <TrendingUpIcon className="size-4"></TrendingUpIcon>
             Trending
           </Button>
-          <Button onClick={() => setSortBy("recent")}>
+          <Button
+            variant={sortBy === "recent" ? "default" : "outline"}
+            onClick={() => setSortBy("recent")}
+          >
             <ClockIcon></ClockIcon>
             Recent
           </Button>
