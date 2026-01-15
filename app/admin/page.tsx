@@ -1,23 +1,25 @@
 import AdminProductCard from "@/components/admin/admin-product-card";
 import StatsCard from "@/components/admin/stats-card";
+import EmptyState from "@/components/common/empty-state";
 import SectionHeader from "@/components/common/section-header";
-import ProductCard from "@/components/products/product-card";
 import { getAllProducts } from "@/lib/products/product-select";
-import { cn } from "@/lib/utils";
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import { ShieldIcon } from "lucide-react";
+import { InboxIcon, ShieldIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 
-export default async function AdmingPage() {
+export default async function AdminPage() {
   const { userId } = await auth();
+
   if (!userId) {
     redirect("/sign-in");
   }
+
   const response = await clerkClient();
   const user = await response.users.getUser(userId!);
-  console.log(user);
+
   const metadata = user.publicMetadata;
   const isAdmin = metadata?.isAdmin ?? false;
+
   if (!isAdmin) {
     redirect("/");
   }
@@ -31,7 +33,6 @@ export default async function AdmingPage() {
   const rejectedProducts = allProducts.filter(
     (product) => product.status === "rejected"
   );
-
   return (
     <div className="py-20">
       <div className="wrapper">
@@ -47,7 +48,7 @@ export default async function AdmingPage() {
           pending={pendingProducts.length}
           rejected={rejectedProducts.length}
           all={allProducts.length}
-        ></StatsCard>
+        />
 
         <section className="my-12">
           <div className="section-header-with-count">
@@ -56,7 +57,24 @@ export default async function AdmingPage() {
             </h2>
           </div>
           <div className="space-y-4">
+            {pendingProducts.length === 0 && (
+              <EmptyState
+                message="No pending products to review"
+                icon={InboxIcon}
+              />
+            )}
             {pendingProducts.map((product) => (
+              <AdminProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        </section>
+
+        <section className="my-12">
+          <div className="section-header-with-count">
+            <h2 className="text-2xl font-bold">All Products</h2>
+          </div>
+          <div className="space-y-4">
+            {allProducts.map((product) => (
               <AdminProductCard key={product.id} product={product} />
             ))}
           </div>

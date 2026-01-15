@@ -1,8 +1,10 @@
 import { ProductType } from "@/types";
-import { Card, CardDescription, CardFooter, CardTitle } from "../ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "../ui/button";
 import { Trash2Icon } from "lucide-react";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { Card, CardDescription, CardFooter, CardTitle } from "../ui/card";
+import AdminActions from "./admin-actions";
+import { cn } from "@/lib/utils";
 
 export default function AdminProductCard({
   product,
@@ -10,11 +12,24 @@ export default function AdminProductCard({
   product: ProductType;
 }) {
   return (
-    <Card className="border rounded-lg p-6 bg-background hover:shadow-md transition-shadow ">
-      <div className="flex-1 min-w-0 space-y-4">
-        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-betweeen gap-6">
-          <CardTitle className="text-xl font-semibold">
+    <Card className="border rounded-lg p-6 bg-background hover:shadow-md transition-shadow">
+      <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+        <div className="flex-1 min-w-0 space-y-4">
+          <CardTitle className="text-xl font-semibold flex justify-between items-center">
             {product.name}
+
+            <Badge
+              className={cn(
+                product.status === "pending" &&
+                  "bg-yellow-600/10 text-yellow-600 border-yellow-600",
+                product.status === "approved" &&
+                  "bg-green-500/10 text-green-600 border-green-500",
+                product.status === "rejected" &&
+                  "bg-red-500/10 text-red-500 border-red-500"
+              )}
+            >
+              {product.status}
+            </Badge>
           </CardTitle>
           <CardDescription className="flex flex-col gap-4">
             {product.tagline}
@@ -25,9 +40,9 @@ export default function AdminProductCard({
                 </Badge>
               ))}
             </div>
-            <div className="flex gap-x-4 gap-y-2 text-sm text-muted-foreground ">
+            <div className="flex gap-x-4 gap-y-2 text-sm text-muted-foreground">
               <p>
-                <span className="font-bold ">By:</span> {product.submittedBy}
+                <span className="font-bold">By:</span> {product.submittedBy}
               </p>
               <p>
                 {product.createdAt
@@ -38,26 +53,28 @@ export default function AdminProductCard({
                     }).format(new Date(product.createdAt?.toISOString() ?? ""))
                   : ""}
               </p>
-
               <p>
                 <a
                   href={product.websiteUrl ?? ""}
                   target="_blank"
                   rel="noopener noreferrer"
-                ></a>
-                Visit Website:
+                >
+                  Visit Website
+                </a>
               </p>
             </div>
           </CardDescription>
           <CardFooter>
-            <Button variant={"outline"}>
-              <Trash2Icon className="size-4"></Trash2Icon>
+            <Button variant="outline">
+              <Trash2Icon className="size-4" />
               Delete
             </Button>
           </CardFooter>
         </div>
+        <div className="lg:shrink-0">
+          <AdminActions status={product.status ?? ""} productId={product.id} />
+        </div>
       </div>
-      <div className="lg:shrink-0">{/* <AdminActions/> */}</div>
     </Card>
   );
 }
