@@ -7,24 +7,6 @@ import ProductCard from "../products/product-card";
 import { getFeaturedProducts } from "@/lib/products/product-select";
 
 export default async function FeaturedProducts() {
-  // const featuredProducts =[
-  //     {
-  //         id:1,
-  //         name: 'ParityKit',
-  //         description:"A toolkit for creating parity products",
-  //         tags:["Saas", "Pricing", "Global"],
-  //         votes:615,
-  //         isFeatured:true,
-  //     },
-  //     {
-  //         id:2,
-  //         name:"Moden Full stack next js course",
-  //         description:"Learn to buld production ready full-stack app with Next.js",
-  //         votes:124,
-  //         isFeatured:false,
-  //         tags:["Coding", "development", "Nextjs"]
-  //     }
-  // ]
   const featuredProducts = await getFeaturedProducts();
   return (
     <section className="py-20 bg-muted/20">
