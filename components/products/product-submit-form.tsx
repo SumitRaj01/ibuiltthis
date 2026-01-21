@@ -17,10 +17,14 @@ export default function ProductSubmitForm() {
   };
   const [state, formAction, isPending] = useActionState(
     addProductAction,
-    initialState
+    initialState,
   );
 
   const { errors, message, success } = state;
+  const getFieldErrors = (fieldName: string): string[] => {
+    if (!errors) return [];
+    return (errors as Record<string, string[]>)[fieldName] ?? [];
+  };
 
   return (
     <form className="space-y-6" action={formAction}>
@@ -30,7 +34,7 @@ export default function ProductSubmitForm() {
             "p-4 rounded-lg-border",
             success
               ? "bg-primary/10 border-primary text-primary"
-              : "bg-destructive/10 border-destructive text-destructive"
+              : "bg-destructive/10 border-destructive text-destructive",
           )}
           role="alert"
           aria-live="polite"
@@ -46,7 +50,7 @@ export default function ProductSubmitForm() {
           placeholder="My Awesome Product"
           required
           onChange={() => {}}
-          error={errors?.name ?? []}
+          error={getFieldErrors("name")}
         ></FormField>
       </div>
 
@@ -57,7 +61,7 @@ export default function ProductSubmitForm() {
         placeholder="My Awesome Product"
         required
         onChange={() => {}}
-        error={errors?.slug ?? []}
+        error={getFieldErrors("slug")}
         helperText="URL-friendly version of your product name"
       ></FormField>
 
@@ -68,7 +72,7 @@ export default function ProductSubmitForm() {
         placeholder="A short, catchy tagline for your product"
         required
         onChange={() => {}}
-        error={errors?.tagline ?? []}
+        error={getFieldErrors("tagline")}
         helperText="URL-friendly version of your product name"
       ></FormField>
 
@@ -79,7 +83,7 @@ export default function ProductSubmitForm() {
         placeholder="Tell us more about your product..."
         required
         onChange={() => {}}
-        error={errors?.description ?? []}
+        error={getFieldErrors("description")}
         textarea
       ></FormField>
 
@@ -90,7 +94,7 @@ export default function ProductSubmitForm() {
         placeholder="https://www.youtube.com"
         required
         onChange={() => {}}
-        error={errors?.websiteUrl ?? []}
+        error={getFieldErrors("websiteUrl")}
         helperText="Enter your product's website or landing page"
       ></FormField>
 
@@ -101,7 +105,7 @@ export default function ProductSubmitForm() {
         placeholder="AI, Productivity , SaaS"
         required
         onChange={() => {}}
-        error={errors?.tags ?? []}
+        error={getFieldErrors("tags")}
         helperText="Comma-separated tags (eg: AI, SaaS, Productivity)"
       ></FormField>
 

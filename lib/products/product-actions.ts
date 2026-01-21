@@ -6,11 +6,11 @@ import { db } from "@/db";
 import z from "zod";
 import { FormState } from "@/types";
 import { eq, sql } from "drizzle-orm";
-import { refresh, revalidatePath } from "next/cache";
+import { revalidatePath } from "next/cache";
 
 export const addProductAction = async (
   prevState: FormState,
-  formData: FormData
+  formData: FormData,
 ) => {
   console.log(formData);
   //auth
@@ -20,6 +20,7 @@ export const addProductAction = async (
       return {
         success: false,
         message: "you must be signed in to submit a product",
+        errors: undefined,
       };
     }
 
@@ -27,6 +28,7 @@ export const addProductAction = async (
       return {
         success: false,
         message: "you must be a member of an organizationh to submit a product",
+        errors: undefined,
       };
     }
     //data
@@ -64,6 +66,7 @@ export const addProductAction = async (
     return {
       success: true,
       message: "Product submitted successfully! It will be reviewed shortly",
+      errors: undefined,
     };
   } catch (error) {
     console.error(error);
@@ -90,6 +93,7 @@ export const upvoteProductAction = async (productId: number) => {
       return {
         success: false,
         message: "you must be signed in to submit a product",
+        errors: undefined,
       };
     }
 
@@ -97,6 +101,7 @@ export const upvoteProductAction = async (productId: number) => {
       return {
         success: false,
         message: "you must be a member of an organizationh to submit a product",
+        errors: undefined,
       };
     }
     await db
